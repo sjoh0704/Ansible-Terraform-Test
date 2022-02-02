@@ -5,3 +5,7 @@
 *.terraform.lock.hcl
 .terraform/
 credentials.tfvars
+
+
+# keyfile
+*.pem
