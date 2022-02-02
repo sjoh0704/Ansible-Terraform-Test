@@ -1,0 +1,7 @@
+# Terraform
+*.bak
+*.tfstate
+*.tfstate.backup
+*.terraform.lock.hcl
+.terraform/
+credentials.tfvars
