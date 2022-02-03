@@ -12,3 +12,9 @@ credentials.tfvars
 
 # csv
 *.csv
+
+# repo
+local_repo/
+
+# python3 virtual environment
+venv/
