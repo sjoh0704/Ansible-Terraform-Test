@@ -1,0 +1,4 @@
+[all]
+ec2-15-152-30-228.ap-northeast-3.compute.amazonaws.com ansible_host=15.152.30.228
+ec2-15-152-154-217.ap-northeast-3.compute.amazonaws.com ansible_host=15.152.154.217
+

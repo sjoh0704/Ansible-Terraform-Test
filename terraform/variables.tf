@@ -65,4 +65,10 @@ data "aws_ami" "distro" {
   }
 
    owners =["374168611083"]
+
 }
+
+variable "inventory_file" {
+  description = "Where to store the generated inventory file"
+}
+

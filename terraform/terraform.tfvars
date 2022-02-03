@@ -16,3 +16,5 @@ default_tags = {
 aws_ec2_size = "t3.micro"
 aws_ec2_num = 2
 
+
+inventory_file = "../ansible/inventory/hosts"
