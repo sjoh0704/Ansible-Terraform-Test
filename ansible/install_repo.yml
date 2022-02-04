@@ -1,0 +1,32 @@
+---
+- name: Install repo
+  hosts: all	
+  gather_facts: no 	
+  become: yes 	
+
+  tasks:
+  - name: install repo directory to remote server
+    ignore_errors: True
+    synchronize: 
+      src: ../local_repo
+      dest: /root/
+
+  - name: repo disable 1
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-AppStream.repo
+  - name: repo disable 2
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-Base.repo
+  - name: repo disable 3
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-Extras.repo
+  - name: repo disable 4
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel-modular.repo
+  - name: repo disable 5
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel.repo
+  - name: repo disable 6
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/azure-cli.repo
+  - name: repo diable 7
+    command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/docker-ce.repo
+
+  - name: Installed the rpm files
+    shell: dnf localinstall /root/local_repo/common/createrepo/*.rpm -y
+    args:
+      chdir: /tmp/rpm_dir
