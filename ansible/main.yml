@@ -1,0 +1,8 @@
+---
+- name: test
+  hosts: all	
+  gather_facts: no 	
+  
+  tasks:
+  - include: tasks/repo-setting.yml
+  - include: tasks/install-nginx.yml

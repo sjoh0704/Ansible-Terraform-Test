@@ -1,0 +1,43 @@
+---
+  - name: move rsync # To use synchronize, must download rsync
+    copy:
+      src: ./files/rsync-3.2.3
+      dest: /tmp/
+
+  - name: "Mode 700 for directory"
+    file:
+      path: "/tmp/rsync-3.2.3/configure"
+      mode: 0700
+    
+  - name: install rsync
+    become: True
+    shell: /tmp/rsync-3.2.3/configure
+
+  - shell: /tmp/rsync-3.2.3/make
+  - shell: /tmp/rsync-3.2.3/makeinstall
+
+  - name: move local_repo to remote server
+    # ignore_errors: True
+    synchronize:
+      src: ../local_repo
+      dest: /root/
+
+  # - name: repo disable 1
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-AppStream.repo
+  # - name: repo disable 2
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-Base.repo
+  # - name: repo disable 3
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/CentOS-Extras.repo
+  # - name: repo disable 4
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel-modular.repo
+  # - name: repo disable 5
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel.repo
+  # - name: repo disable 6
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/azure-cli.repo
+  # - name: repo diable 7
+  #   command: sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/docker-ce.repo
+
+  # - name: Installed the rpm files
+  #   shell: dnf localinstall /root/local_repo/common/createrepo/*.rpm -y
+  #   args:
+  #     chdir: /tmp/rpm_dir

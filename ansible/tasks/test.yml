@@ -1,0 +1,31 @@
+- name: test debug
+  debug: 
+    msg: "This is test debug"
+  
+- name: create foo.conf file
+  file:
+    path: /etc/foo.conf
+    owner: root
+    group: root
+    mode: "0644"
+    state: touch
+
+- name: change repo url
+  shell: yum repolist
+  register: result
+
+- name: show result
+  debug:
+    msg:
+    - "{{ result.stdout_lines }}"
+  when: result.stdout.find("AppStream") != -1
+
+- shell: echo "{{ item }}"
+  with_items:
+    - one
+    - two
+  register: echo
+
+- debug:
+    msg: 
+      - "{{ echo.results|map(attribute='stdout_lines')|list }}"

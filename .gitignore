@@ -19,3 +19,6 @@ local_repo*
 
 # python3 virtual environment
 venv/
+
+#binary
+rsync*

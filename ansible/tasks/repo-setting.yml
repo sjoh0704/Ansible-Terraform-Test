@@ -1,0 +1,18 @@
+- name: disable repo 1  
+  shell: sed -i  "s/enabled=1/enabled=0/g" /etc/yum.repos.d/CentOS-Base.repo 
+
+- name: disable repo 2  
+  shell: sed -i  "s/enabled=1/enabled=0/g" /etc/yum.repos.d/CentOS-Extras.repo 
+
+- name: disable repo 3  
+  shell: sed -i  "s/enabled=1/enabled=0/g" /etc/yum.repos.d/kubernetes.repo 
+
+- name: disable mirrorlist  
+  shell: sed -i  "s/mirrorlist/# mirrorlist/g" /etc/yum.repos.d/CentOS-AppStream.repo 
+
+
+- name: enable base url  
+  shell: sed -i  "s/#baseurl/baseurl/g" /etc/yum.repos.d/CentOS-AppStream.repo 
+
+- name: change url  
+  shell: sed -i  "s/mirror.centos.org/vault.centos.org/g" /etc/yum.repos.d/CentOS-AppStream.repo 

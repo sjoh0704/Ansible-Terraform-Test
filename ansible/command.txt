@@ -1,0 +1,11 @@
+# playbook 실행
+
+ansible-playbook -i ./inventory/hosts ./main.yml \
+-e ansible_user=centos -e bootstrap_os=centos \
+-e ansible_ssh_private_key_file=../kubespray.pem \
+-e cloud_provider=aws -b --become-user=root --flush-cache -v
+
+
+ansible-playbook ./main.yml \
+-e bootstrap_os=centos \
+-e cloud_provider=aws -b --become-user=root --flush-cache -v
