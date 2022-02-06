@@ -61,11 +61,10 @@ data "aws_ami" "distro" {
 
   filter {
     name   = "name"
-    values = ["ap-northeast-3 image for x86_64 CentOS_8"]
+    values = ["centos-8-pke-1.17.17-202105101226"]
   }
 
-   owners =["374168611083"]
-
+   owners =["161831738826"]
 }
 
 variable "inventory_file" {
