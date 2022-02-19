@@ -10,10 +10,10 @@ resource "aws_vpc" "vpc" {
   }))
 }
 
-# resource "aws_eip" "cluster-nat-eip" {
-#   count = length(var.aws_cidr_subnets_public)
-#   vpc   = true
-# }
+resource "aws_eip" "nat-eip" {
+  count = length(var.aws_cidr_subnets_public)
+  vpc   = true
+}
 
 resource "aws_internet_gateway" "vpc-internetgw" {
   vpc_id = aws_vpc.vpc.id
@@ -34,26 +34,23 @@ resource "aws_subnet" "vpc-subnets-public" {
   }))
 }
 
-# resource "aws_nat_gateway" "cluster-nat-gateway" {
-#   count         = length(var.aws_cidr_subnets_public)
-#   allocation_id = element(aws_eip.cluster-nat-eip.*.id, count.index)
-#   subnet_id     = element(aws_subnet.cluster-vpc-subnets-public.*.id, count.index)
-# }
+resource "aws_nat_gateway" "nat-gateway" {
+  count         = length(var.aws_cidr_subnets_public)
+  allocation_id = element(aws_eip.nat-eip.*.id, count.index)
+  subnet_id     = element(aws_subnet.vpc-subnets-public.*.id, count.index)
+}
 
-# resource "aws_subnet" "cluster-vpc-subnets-private" {
-#   vpc_id            = aws_vpc.cluster-vpc.id
-#   count             = length(var.aws_cidr_subnets_private)
-#   availability_zone = element(var.aws_avail_zones, count.index % length(var.aws_avail_zones))
-#   cidr_block        = element(var.aws_cidr_subnets_private, count.index)
+resource "aws_subnet" "vpc-subnets-private" {
+  vpc_id            = aws_vpc.vpc.id
+  count             = length(var.aws_cidr_subnets_private)
+  availability_zone = element(var.aws_avail_zones, count.index % length(var.aws_avail_zones))
+  cidr_block        = element(var.aws_cidr_subnets_private, count.index)
 
-#   tags = merge(var.default_tags, tomap({
-#     Name = "kubernetes-${var.aws_cluster_name}-${element(var.aws_avail_zones, count.index)}-private"
-#   }))
-# }
+  tags = merge(var.default_tags, tomap({
+    Name = "${var.aws_cluster_name}-${element(var.aws_avail_zones, count.index)}-private"
+  }))
+}
 
-#Routing in VPC
-
-#TODO: Do we need two routing tables for each subnet for redundancy or is one enough?
 
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.vpc.id
@@ -68,19 +65,19 @@ resource "aws_route_table" "public-route-table" {
   }))
 }
 
-# resource "aws_route_table" "kubernetes-private" {
-#   count  = length(var.aws_cidr_subnets_private)
-#   vpc_id = aws_vpc.cluster-vpc.id
+resource "aws_route_table" "private-route-table" {
+  count  = length(var.aws_cidr_subnets_private)
+  vpc_id = aws_vpc.vpc.id
 
-#   route {
-#     cidr_block     = "0.0.0.0/0"
-#     nat_gateway_id = element(aws_nat_gateway.cluster-nat-gateway.*.id, count.index)
-#   }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = element(aws_nat_gateway.nat-gateway.*.id, count.index)
+  }
 
-#   tags = merge(var.default_tags, tomap({
-#     Name = "kubernetes-${var.aws_cluster_name}-routetable-private-${count.index}"
-#   }))
-# }
+  tags = merge(var.default_tags, tomap({
+    Name = "${var.aws_cluster_name}-routetable-private-${count.index}"
+  }))
+}
 
 resource "aws_route_table_association" "public-rt-association" {
   count          = length(var.aws_cidr_subnets_public)
@@ -88,11 +85,11 @@ resource "aws_route_table_association" "public-rt-association" {
   route_table_id = aws_route_table.public-route-table.id
 }
 
-# resource "aws_route_table_association" "kubernetes-private" {
-#   count          = length(var.aws_cidr_subnets_private)
-#   subnet_id      = element(aws_subnet.cluster-vpc-subnets-private.*.id, count.index)
-#   route_table_id = element(aws_route_table.kubernetes-private.*.id, count.index)
-# }
+resource "aws_route_table_association" "private-rt-association" {
+  count          = length(var.aws_cidr_subnets_private)
+  subnet_id      = element(aws_subnet.vpc-subnets-private.*.id, count.index)
+  route_table_id = element(aws_route_table.private-route-table.*.id, count.index)
+}
 
 #Kubernetes Security Groups
 
