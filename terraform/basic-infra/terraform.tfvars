@@ -1,5 +1,5 @@
 #Global Vars
-aws_cluster_name = "seung-test"
+aws_cluster_name = "my-test"
 
 #VPC Vars
 aws_vpc_cidr_block       = "10.0.0.0/16"
@@ -17,4 +17,4 @@ aws_ec2_size = "t3.micro"
 aws_ec2_num = 2
 
 
-inventory_file = "../ansible/inventory/hosts"
+inventory_file = "../../ansible/inventory/hosts"
