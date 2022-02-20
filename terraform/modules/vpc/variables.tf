@@ -30,3 +30,10 @@ variable "default_tags" {
   description = "Default tags for all resources"
   type        = map(string)
 }
+
+
+variable "use_nat_gateway" {
+  description = "check if use nat gateway"
+  type        = bool
+  default     = true  
+}
