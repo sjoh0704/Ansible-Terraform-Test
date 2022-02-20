@@ -19,5 +19,5 @@ output "default_tags" {
 }
 
 output "aws_route_table_private" {
-  value = aws_route_table.public-route-table.*.id
+  value = aws_route_table.private-route-table.*.id
 }
