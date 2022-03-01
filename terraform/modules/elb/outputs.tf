@@ -9,3 +9,8 @@
 # output "aws_nlb_api_tg_arn" {
 #   value = aws_lb_target_group.aws-nlb-api-tg.arn
 # }
+
+
+output "aws_lb_arn" {
+    value = aws_lb.aws-nlb.arn
+}

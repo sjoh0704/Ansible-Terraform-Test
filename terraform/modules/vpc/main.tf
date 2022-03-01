@@ -11,7 +11,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_eip" "nat-eip" {
-  count = var.use_nat_gateway ? length(var.aws_cidr_subnets_public):0 
+  count = length(var.aws_cidr_subnets_private) == 0 ? 0: (var.use_nat_gateway ? length(var.aws_cidr_subnets_public):0) 
   vpc   = true
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "vpc-subnets-public" {
 }
 
 resource "aws_nat_gateway" "nat-gateway" {
-  count         = var.use_nat_gateway ? length(var.aws_cidr_subnets_public):0
+  count         = length(var.aws_cidr_subnets_private) == 0 ? 0: (var.use_nat_gateway ? length(var.aws_cidr_subnets_public):0)
   allocation_id = element(aws_eip.nat-eip.*.id, count.index)
   subnet_id     = element(aws_subnet.vpc-subnets-public.*.id, count.index)
 }
@@ -75,7 +75,7 @@ resource "aws_route_table" "private-route-table" {
 }
 
 resource "aws_route" "route_with_nat_gatway" {
-  count  = var.use_nat_gateway ? length(var.aws_cidr_subnets_private):0 
+  count  = length(var.aws_cidr_subnets_private) == 0 ? 0: (var.use_nat_gateway ? length(var.aws_cidr_subnets_public):0) 
   route_table_id =  element(aws_route_table.private-route-table.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id = element(aws_nat_gateway.nat-gateway.*.id, count.index) 

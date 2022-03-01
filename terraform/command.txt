@@ -3,3 +3,5 @@ terraform plan -var-file=../credentials.tfvars
 terraform apply -var-file=../credentials.tfvars
 terraform destroy -var-file=../credentials.tfvars
 terraform apply -var-file=../../credentials-california.tfvars
+
+public 서브넷의 갯수와 Private 서브넷의 갯수를 동일하게 맞춰준다. 
